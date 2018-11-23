@@ -11,13 +11,13 @@ Gem::Specification.new do |s|
   s.email       = 'bowens@beanstream.com'
   s.homepage    ='http://developer.beanstream.com'
   s.license     = 'MIT'
-  
+
   s.files = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- test/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ['lib']
-  
-  s.add_dependency('rest-client', '~> 1.4')
+
+  s.add_dependency('rest-client', '~> 2.0')
   s.add_dependency('json', '~> 1.8.1')
 
   s.add_development_dependency('shoulda', '~> 3.4.0')
