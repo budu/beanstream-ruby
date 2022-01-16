@@ -3,37 +3,33 @@ require 'beanstream'
 require 'shoulda'
 
 module Beanstream
-  
   class PaymentsAPITest < Test::Unit::TestCase
-
     should "canery test print out Beanstream!" do
       puts "Beanstream!"
       assert true
     end
-	
+
     should "make payment url be the same" do
       assert_equal("/api/v1/payments/", PaymentsAPI.new.make_payment_url())
     end
-    
+
     should "make return url be the same" do
       assert_equal("/api/v1/payments/1234/returns", PaymentsAPI.new.payment_returns_url("1234"))
     end
-    
+
     should "make void url be the same" do
       assert_equal("/api/v1/payments/1234/void", PaymentsAPI.new.payment_void_url("1234"))
     end
   end
-  
+
   class PaymentsAPIIntegrationTest < Test::Unit::TestCase
-    
     setup do
       Beanstream.merchant_id = "300200578"
       Beanstream.payments_api_key = "4BaD82D9197b4cc4b70a221911eE9f70"
     end
-    
-    #Card purchase
+
+    # Card purchase
     should "have successful credit card payment" do
-      
       result = Beanstream.PaymentsAPI.make_payment(
         {
           :order_number => PaymentsAPI.generateRandomOrderId("test"),
@@ -50,15 +46,14 @@ module Beanstream
         }
       )
       puts "result: #{result}"
-      
+
       assert(PaymentsAPI.payment_approved(result))
       transaction_id = result['id']
       puts "TransactionId: #{transaction_id}"
     end
-    
+
     # Token purchase
     should "purchase successfully with a legato token" do
-      
       token = Beanstream.PaymentsAPI.get_legato_token(
         {
           :number => "4030000010001234",
@@ -89,10 +84,10 @@ module Beanstream
         assert(false)
       end
     end
-    
-    #Card decline
+
+    # Card decline
     should "have declined credit card payment" do
-      
+
       decline = false
       begin
         result = Beanstream.PaymentsAPI.make_payment(
@@ -110,21 +105,20 @@ module Beanstream
           }
         })
         puts "Success! TransactionID: #{result['id']}"
-        
+
       rescue BeanstreamException => ex
         decline = true
         puts "Exception: #{ex.user_facing_message}"
         assert(ex.user_facing_message == "DECLINE")
         assert(ex.is_user_error())
       end
-      
-      assert(decline)
 
+      assert(decline)
     end
-    
-    #PreAuth card
+
+    # PreAuth card
     should "have successful credit card pre-auth and completion" do
-      
+
       decline = false
       begin
         result = Beanstream.PaymentsAPI.make_payment(
@@ -146,25 +140,24 @@ module Beanstream
         assert(PaymentsAPI.payment_approved(result))
         transaction_id = result['id']
         puts "TransactionId: #{transaction_id}"
-        
+
         result = Beanstream.PaymentsAPI.complete_preauth(transaction_id, 59.50)
         puts "completion result: #{result}"
         assert(PaymentsAPI.payment_approved(result))
-      
+
       rescue BeanstreamException => ex
         decline = true
         puts "Exception: #{ex.user_facing_message}"
         assert(ex.user_facing_message == "DECLINE")
         assert(ex.is_user_error())
       end
-      
+
       assert(!decline)
-      
     end
-    
-    #PreAuth token
+
+    # PreAuth token
     should "pre-auth and complete successfully with a legato token" do
-      
+
       # 1) get token (this is normally done in the client app)
       token = Beanstream.PaymentsAPI.get_legato_token(
         {
@@ -205,7 +198,7 @@ module Beanstream
       end
     end
 
-    #Return
+    # Return
     should "have successful credit card payment, then get the payment, then return the payment" do
 
       result = Beanstream.PaymentsAPI.make_payment(
@@ -244,9 +237,9 @@ module Beanstream
       end
     end
 
-    #Void
+    # Void
     should "have successful credit card payment, then void the payment" do
-	
+
       result = Beanstream.PaymentsAPI.make_payment(
         {
           :order_number => PaymentsAPI.generateRandomOrderId("test"),
@@ -295,7 +288,5 @@ module Beanstream
         Beanstream.PaymentsAPI.void_payment("500", 100)
       end
     end
-    
   end
-  
 end

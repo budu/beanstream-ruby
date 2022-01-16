@@ -4,18 +4,18 @@ require 'json'
 
 module Beanstream
   class Transaction
-    
+
     def encode(merchant_id, api_key)
       str = "#{merchant_id}:#{api_key}"
       enc = Base64.encode64(str).gsub("\n", "")
     end
-    
+
     def transaction_post(method, url_path, merchant_id, api_key, data={})
       enc = encode(merchant_id, api_key)
-      
+
       path = Beanstream.api_host_url+url_path
       #puts "processing the data: #{method} #{path} #{data.to_json}"
-    
+
       req_params = {
         :verify_ssl => OpenSSL::SSL::VERIFY_PEER,
         :ssl_ca_file => Beanstream.ssl_ca_cert,
@@ -29,7 +29,7 @@ module Beanstream
         :url => path,
         :payload => data.to_json
       }
-      
+
       begin
         result = RestClient::Request.execute(req_params)
         returns = JSON.parse(result)
@@ -42,17 +42,17 @@ module Beanstream
       rescue RestClient::Exception => ex
         raise handle_restclient_error(ex)
       end
-      
+
     end
-    
+
     def handle_api_error(ex)
       #puts "error: #{ex}"
-      
+
       http_status_code = ex.http_code
       message = ex.message
       code = 0
       category = 0
-      
+
       begin
         obj = JSON.parse(ex.http_body)
         obj = Util.symbolize_names(obj)
@@ -62,7 +62,7 @@ module Beanstream
       rescue JSON::ParserError
         puts "Error parsing json error message"
       end
-      
+
       if http_status_code == 302
         raise InvalidRequestException.new(code, category, "Redirection for IOP and 3dSecure not supported by the Beanstream SDK yet. #{message}", http_status_code)
       elsif http_status_code == 400
@@ -83,7 +83,7 @@ module Beanstream
         raise BeanstreamException.new(code, category, message, http_status_code)
       end
     end
-    
+
     def handle_restclient_error(e)
 
       case e
@@ -108,5 +108,5 @@ module Beanstream
       raise APIConnectionError.new(message + "\n\n(Network error: #{e.message})")
     end
   end
-  
+
 end
