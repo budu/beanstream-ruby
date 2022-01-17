@@ -59,7 +59,7 @@ module Beanstream
 
       # make a 3nd purchase
       orderNum3 = PaymentsAPI.generateRandomOrderId(prefix)
-      puts "OrderID 3: #{orderNum2}"
+      puts "OrderID 3: #{orderNum3}"
       purchase['amount'] = 21.55
       purchase['order_number'] = orderNum3
       result = Beanstream.PaymentsAPI.make_payment(purchase)
