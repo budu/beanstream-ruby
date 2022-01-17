@@ -67,16 +67,17 @@ module Beanstream
       transaction_3_id = result['id']
 
       # search for transactions
-      last3Hours = Time.now - 3*60*60
-      next3Hours = Time.now + 3*60*60
-      results = Beanstream.ReportingAPI.search_transactions(last3Hours, next3Hours, 1, 3)
+      # FIXME: not sure about the correct way to handle time zones here
+      query_start_time = Time.now - 4*60*60
+      query_end_time = Time.now + 4*60*60
+      results = Beanstream.ReportingAPI.search_transactions(query_start_time, query_end_time, 1, 3)
       assert(results != nil)
       assert(results.length == 3)
 
       # find transaction 1 from order number
       results = Beanstream.ReportingAPI.search_transactions(
-        last3Hours,
-        next3Hours,
+        query_start_time,
+        query_end_time,
         1,
         10,
         Criteria.new(
@@ -90,7 +91,7 @@ module Beanstream
       assert(results.length == 1, "Found #{results.length} instead")
 
       # find transaction 2 and 3 from ref1 and amount
-      results = Beanstream.ReportingAPI.search_transactions(last3Hours, next3Hours, 1, 10,
+      results = Beanstream.ReportingAPI.search_transactions(query_start_time, query_end_time, 1, 10,
         Array[
           Criteria.new(Fields::Ref1, Operators::EQUALS, prefix),
           Criteria.new(Fields::Amount, Operators::LESS_THAN, 50)
