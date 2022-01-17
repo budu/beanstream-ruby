@@ -26,7 +26,6 @@ module Beanstream
       prefix = SecureRandom.hex(4)
       # prepare a payment
       orderNum1 = PaymentsAPI.generateRandomOrderId(prefix)
-      puts "OrderID 1: #{orderNum1}"
       purchase = {
         "order_number" => orderNum1,
         "amount" => 100,
@@ -50,7 +49,6 @@ module Beanstream
 
       # make a 2nd purchase
       orderNum2 = PaymentsAPI.generateRandomOrderId(prefix)
-      puts "OrderID 2: #{orderNum2}"
       purchase['amount'] = 33.29
       purchase['order_number'] = orderNum2
       result = Beanstream.PaymentsAPI.make_payment(purchase)
@@ -59,7 +57,6 @@ module Beanstream
 
       # make a 3nd purchase
       orderNum3 = PaymentsAPI.generateRandomOrderId(prefix)
-      puts "OrderID 3: #{orderNum3}"
       purchase['amount'] = 21.55
       purchase['order_number'] = orderNum3
       result = Beanstream.PaymentsAPI.make_payment(purchase)
@@ -87,7 +84,6 @@ module Beanstream
         )
       )
       assert(results != nil)
-      puts "Report search by order number\n: #{results}"
       assert(results.length == 1, "Found #{results.length} instead")
 
       # find transaction 2 and 3 from ref1 and amount
@@ -98,7 +94,6 @@ module Beanstream
         ]
        )
       assert(results != nil)
-      puts "Report search by order number and amount\n: #{results}"
       assert(results.length == 2, "Found #{results.length} instead")
     end
   end

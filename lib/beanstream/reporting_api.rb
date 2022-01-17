@@ -1,12 +1,10 @@
 
 module Beanstream
-  
   class ReportingAPI < Transaction
-
     def reports_url
       "#{Beanstream.api_base_url()}/reports"
     end
-    
+
     def search_transactions(start_date, end_date, start_row, end_row, criteria=nil)
       if !start_date.is_a?(Time)
         raise InvalidRequestException.new(0, 0, "start_date must be of type Time in ReportingApi.search_transactions", 0)
@@ -15,17 +13,16 @@ module Beanstream
         raise InvalidRequestException.new(0, 0, "end_date must be of type Time in ReportingApi.search_transactions", 0)
       end
       if criteria != nil && !criteria.kind_of?(Array) && !criteria.is_a?(Beanstream::Criteria)
-        puts "criteria was of type: #{criteria.class}"
         raise InvalidRequestException.new(0, 0, "criteria must be of type Array<Critiera> or Criteria in ReportingApi.search_transactions", 0)
       end
       if criteria.is_a?(Beanstream::Criteria)
         #make it an array
         criteria = Array[criteria]
       end
-      
+
       startD = start_date.strftime "%Y-%m-%dT%H:%M:%S"
       endD = end_date.strftime "%Y-%m-%dT%H:%M:%S"
-      
+
       criteria_hash = Array[]
       if criteria != nil && criteria.length > 0
         for c in criteria
@@ -40,28 +37,24 @@ module Beanstream
         "end_row" => end_row,
         "criteria" => criteria_hash
       }
-      puts "\n\nReport search query #{query}\n\n"
       val = transaction_post("POST", reports_url, Beanstream.merchant_id, Beanstream.reporting_api_key, query)
       results = val['records']
     end
-    
   end
-  
+
   class Criteria
     attr_accessor :field, :operator, :value
-    
+
     def initialize(field, operator, value)
       @field = field
       @operator = operator
       @value = value
     end
-    
+
     def to_hash()
       {'field' => @field, 'operator' => @operator, 'value' => @value}
     end
-    
   end
-
 end
 
 module Operators
