@@ -11,7 +11,7 @@ module Beanstream
     end
 
     should "make reports url be the same" do
-      assert_equal("/api/v1/reports", ReportingAPI.new.reports_url())
+      assert_equal("/v1/reports", ReportingAPI.new.reports_url())
     end
   end
 

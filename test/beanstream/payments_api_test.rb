@@ -10,15 +10,15 @@ module Beanstream
     end
 
     should "make payment url be the same" do
-      assert_equal("/api/v1/payments/", PaymentsAPI.new.make_payment_url())
+      assert_equal("/v1/payments/", PaymentsAPI.new.make_payment_url())
     end
 
     should "make return url be the same" do
-      assert_equal("/api/v1/payments/1234/returns", PaymentsAPI.new.payment_returns_url("1234"))
+      assert_equal("/v1/payments/1234/returns", PaymentsAPI.new.payment_returns_url("1234"))
     end
 
     should "make void url be the same" do
-      assert_equal("/api/v1/payments/1234/void", PaymentsAPI.new.payment_void_url("1234"))
+      assert_equal("/v1/payments/1234/void", PaymentsAPI.new.payment_void_url("1234"))
     end
   end
 

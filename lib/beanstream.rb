@@ -7,9 +7,8 @@ require 'beanstream/exceptions'
 
 module Beanstream
 
-  @url_prefix = "www"
-  @url_suffix = "api"
-  @url_base = "beanstream.com"
+  @url_prefix = "api.na"
+  @url_base = "bambora.com"
   @url_version = "v1"
   @ssl_ca_cert = File.dirname(__FILE__) + '/resources/cacert.pem'
   @timeout = 80
@@ -17,7 +16,7 @@ module Beanstream
 
   class << self
     attr_accessor :merchant_id, :payments_api_key, :profiles_api_key, :reporting_api_key
-    attr_accessor :url_prefix, :url_base, :url_suffix, :url_version
+    attr_accessor :url_prefix, :url_base, :url_version
     attr_accessor :url_payments, :url_return, :url_void
     attr_accessor :ssl_ca_cert, :timeout, :open_timeout
   end
@@ -27,7 +26,7 @@ module Beanstream
   end
 
   def self.api_base_url()
-    "/#{url_suffix}/#{url_version}"
+    "/#{url_version}"
   end
 
   def self.PaymentsAPI()

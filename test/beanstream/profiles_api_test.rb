@@ -11,11 +11,11 @@ module Beanstream
     end
 
     should "make profiles url be the same" do
-      assert_equal("/api/v1/profiles", ProfilesAPI.new.profile_url())
+      assert_equal("/v1/profiles", ProfilesAPI.new.profile_url())
     end
 
     should "make profiles/cards url be the same" do
-      assert_equal("/api/v1/profiles/cards", ProfilesAPI.new.profile_cards_url())
+      assert_equal("/v1/profiles/cards", ProfilesAPI.new.profile_cards_url())
     end
   end
 
