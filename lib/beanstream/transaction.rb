@@ -18,7 +18,6 @@ module Beanstream
 
       req_params = {
         :verify_ssl => OpenSSL::SSL::VERIFY_PEER,
-        :ssl_ca_file => Beanstream.ssl_ca_cert,
         :timeout => Beanstream.timeout,
         :open_timeout => Beanstream.open_timeout,
         :headers => {
